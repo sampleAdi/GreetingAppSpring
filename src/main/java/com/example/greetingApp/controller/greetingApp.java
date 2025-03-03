@@ -15,8 +15,9 @@ public class greetingApp {
     }
 
     @GetMapping
-    public String getGreeting() {
-        return "{\"message\": \"" + greetingService.getGreetingMessage() + "\"}";
+    public String getGreeting(@RequestParam(required = false) String firstName,
+                              @RequestParam(required = false) String lastName) {
+        return "{\"message\": \"" + greetingService.getGreetingMessage(firstName, lastName) + "\"}";
     }
 
     @PostMapping
