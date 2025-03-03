@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/greeting")
-public class greetingApp {  // ✅ Class name greetingApp hai, isko maintain rakha hai.
+public class greetingApp {  // ✅
 
     private final GreetingService greetingService;
 
     // Constructor Injection
-    public greetingApp(GreetingService greetingService) {  // ✅ Constructor name bhi same as class name
+    public greetingApp(GreetingService greetingService) {  // ✅
         this.greetingService = greetingService;
     }
 
