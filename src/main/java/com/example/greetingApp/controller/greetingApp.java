@@ -39,7 +39,7 @@ public class greetingApp {
         return greetingService.getGreetingById(id);
     }
 
-    // ✅ UC5: Update Greeting
+    // ✅ UC5: Update Greeting using Query Param
     @PutMapping("/update/{id}")
     public GreetingEntity updateGreeting(@PathVariable Long id, @RequestParam String message) {
         return greetingService.updateGreeting(id, message);
@@ -49,5 +49,11 @@ public class greetingApp {
     @GetMapping("/all")
     public List<GreetingEntity> getAllGreetings() {
         return greetingService.listAllGreetings();
+    }
+
+    // ✅ UC7: Edit a Greeting Message
+    @PutMapping("/edit/{id}")
+    public GreetingEntity editGreeting(@PathVariable Long id, @RequestBody GreetingEntity newGreeting) {
+        return greetingService.editGreeting(id, newGreeting);
     }
 }
