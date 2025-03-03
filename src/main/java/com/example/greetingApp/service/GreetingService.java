@@ -16,12 +16,12 @@ public class GreetingService {
 
     // ✅ UC1: Default Greeting
     public GreetingEntity defaultGreeting() {
-        return new GreetingEntity("Hello, World!");
+        return new GreetingEntity("Hello, Welcome to Greeting App!");
     }
 
-    // ✅ UC2: Personalized Greeting
+    // ✅ UC2: Greeting with Name
     public GreetingEntity personalizedGreeting(String name) {
-        return new GreetingEntity("Hello, " + name + "!");
+        return new GreetingEntity("Hello, " + name + "! Welcome to Greeting App.");
     }
 
     // ✅ UC3: Save Greeting
@@ -34,15 +34,15 @@ public class GreetingService {
         return greetingRepository.findById(id);
     }
 
-    // ✅ UC5: Update Greeting using Query Param
+    // ✅ UC5: Update Greeting
     public GreetingEntity updateGreeting(Long id, String message) {
         Optional<GreetingEntity> optionalGreeting = greetingRepository.findById(id);
         if (optionalGreeting.isPresent()) {
-            GreetingEntity existingGreeting = optionalGreeting.get();
-            existingGreeting.setMessage(message);
-            return greetingRepository.save(existingGreeting);
+            GreetingEntity greeting = optionalGreeting.get();
+            greeting.setMessage(message);
+            return greetingRepository.save(greeting);
         } else {
-            throw new RuntimeException("Greeting not found with id: " + id);
+            throw new RuntimeException("Greeting not found with ID: " + id);
         }
     }
 
@@ -51,15 +51,26 @@ public class GreetingService {
         return greetingRepository.findAll();
     }
 
-    // ✅ UC7: Edit a Greeting Message using Request Body
-    public GreetingEntity editGreeting(Long id, GreetingEntity newGreeting) {
+    // ✅ UC7: Edit Greeting Message (PATCH)
+    public GreetingEntity editGreeting(Long id, String message) {
         Optional<GreetingEntity> optionalGreeting = greetingRepository.findById(id);
         if (optionalGreeting.isPresent()) {
-            GreetingEntity existingGreeting = optionalGreeting.get();
-            existingGreeting.setMessage(newGreeting.getMessage());  // Updating only the message
-            return greetingRepository.save(existingGreeting);
+            GreetingEntity greeting = optionalGreeting.get();
+            greeting.setMessage(message);
+            return greetingRepository.save(greeting);
         } else {
-            throw new RuntimeException("Greeting not found with id: " + id);
+            throw new RuntimeException("Greeting not found with ID: " + id);
+        }
+    }
+
+    // ✅ UC8: Delete a Greeting Message
+    public String deleteGreeting(Long id) {
+        Optional<GreetingEntity> optionalGreeting = greetingRepository.findById(id);
+        if (optionalGreeting.isPresent()) {
+            greetingRepository.deleteById(id);
+            return "Greeting with ID " + id + " has been deleted successfully.";
+        } else {
+            throw new RuntimeException("Greeting not found with ID: " + id);
         }
     }
 }
