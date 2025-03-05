@@ -2,6 +2,7 @@ package com.example.greetingApp.service;
 
 import com.example.greetingApp.model.GreetingEntity;
 import com.example.greetingApp.repository.GreetingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,41 +11,66 @@ import java.util.Optional;
 @Service
 public class GreetingService {
 
-    private final GreetingRepository greetingRepository;
+    @Autowired
+    private GreetingRepository greetingRepository;
 
-    public GreetingService(GreetingRepository greetingRepository) {
-        this.greetingRepository = greetingRepository;
+    // ✅ UC1: Default Greeting
+    public GreetingEntity defaultGreeting() {
+        return new GreetingEntity("Hello, Welcome to Greeting App!");
     }
 
-    public String getGreetingMessage(String firstName, String lastName) {
-        if (firstName == null && lastName == null) {
-            return "Hello, World!";
-        }
-        return "Hello, " + (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "") + "!";
+    // ✅ UC2: Greeting with Name
+    public GreetingEntity personalizedGreeting(String name) {
+        return new GreetingEntity("Hello, " + name + "! Welcome to Greeting App.");
     }
 
+    // ✅ UC3: Save Greeting
     public GreetingEntity saveGreeting(GreetingEntity greeting) {
-        if (greeting.getMessage() == null || greeting.getMessage().trim().isEmpty()) {
-            greeting.setMessage("Default Greeting Message");
-        }
-
-        if (greeting.getId() != null) {
-            Optional<GreetingEntity> existingGreeting = greetingRepository.findById(greeting.getId());
-            if (existingGreeting.isPresent()) {
-                GreetingEntity updatedGreeting = existingGreeting.get();
-                updatedGreeting.setMessage(greeting.getMessage());
-                return greetingRepository.save(updatedGreeting);
-            }
-        }
-
         return greetingRepository.save(greeting);
     }
 
-    public List<GreetingEntity> getAllGreetings() {
+    // ✅ UC4: Get Greeting by ID
+    public Optional<GreetingEntity> getGreetingById(Long id) {
+        return greetingRepository.findById(id);
+    }
+
+    // ✅ UC5: Update Greeting
+    public GreetingEntity updateGreeting(Long id, String message) {
+        Optional<GreetingEntity> optionalGreeting = greetingRepository.findById(id);
+        if (optionalGreeting.isPresent()) {
+            GreetingEntity greeting = optionalGreeting.get();
+            greeting.setMessage(message);
+            return greetingRepository.save(greeting);
+        } else {
+            throw new RuntimeException("Greeting not found with ID: " + id);
+        }
+    }
+
+    // ✅ UC6: List All Greetings
+    public List<GreetingEntity> listAllGreetings() {
         return greetingRepository.findAll();
     }
 
-    public Optional<GreetingEntity> getGreetingById(Long id) {
-        return greetingRepository.findById(id);
+    // ✅ UC7: Edit Greeting Message (PATCH)
+    public GreetingEntity editGreeting(Long id, String message) {
+        Optional<GreetingEntity> optionalGreeting = greetingRepository.findById(id);
+        if (optionalGreeting.isPresent()) {
+            GreetingEntity greeting = optionalGreeting.get();
+            greeting.setMessage(message);
+            return greetingRepository.save(greeting);
+        } else {
+            throw new RuntimeException("Greeting not found with ID: " + id);
+        }
+    }
+
+    // ✅ UC8: Delete a Greeting Message
+    public String deleteGreeting(Long id) {
+        Optional<GreetingEntity> optionalGreeting = greetingRepository.findById(id);
+        if (optionalGreeting.isPresent()) {
+            greetingRepository.deleteById(id);
+            return "Greeting with ID " + id + " has been deleted successfully.";
+        } else {
+            throw new RuntimeException("Greeting not found with ID: " + id);
+        }
     }
 }
