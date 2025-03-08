@@ -13,7 +13,7 @@ import java.util.Optional;
 public class greetingApp {
 
     @Autowired
-    private GreetingService greetingService;
+    GreetingService greetingService;
 
     // ✅ UC1: Default Greeting
     @GetMapping("/default")
